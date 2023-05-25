@@ -1,6 +1,7 @@
 package ua.com.khpi.database.yegorchevardin.lab07.program.configuration;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ import java.util.Scanner;
 public class ProgramConfiguration {
     @Bean
     public Gson gson() {
-        return new Gson();
+        return new GsonBuilder().setPrettyPrinting().create();
     }
 
     @Bean

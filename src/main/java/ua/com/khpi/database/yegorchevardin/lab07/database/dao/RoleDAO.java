@@ -9,5 +9,6 @@ import java.util.Optional;
  * @author yegorchevardin
  * @version 0.0.1
  */
-public interface RoleDAO extends CreateReadDeleteDAO<Optional<Role>>, TableResultDAO {
+public interface RoleDAO extends CreateReadDeleteDAO<Role>, TableResultDAO {
+    Optional<Role> findByName(String name);
 }
