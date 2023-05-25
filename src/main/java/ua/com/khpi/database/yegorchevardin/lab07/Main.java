@@ -12,12 +12,25 @@ import ua.com.khpi.database.yegorchevardin.lab07.program.startup.ProgramStartup;
  */
 public class Main {
     public static void main(String[] args) {
-        boolean withDump;
+        boolean withDump = false;
+        String customPropertiesPath = null;
 
-        try {
-            withDump = Boolean.getBoolean(args[0]);
-        } catch (IndexOutOfBoundsException e) {
-            withDump = false;
+        for (String arg : args) {
+            if (arg.startsWith("--customProperties=")) {
+                customPropertiesPath = arg.substring(arg.indexOf("=") + 1);
+                break;
+            }
+            if (arg.startsWith("--refreshInsertions")) {
+                withDump = true;
+            }
+        }
+
+        if (customPropertiesPath != null) {
+            System.setProperty("spring.config.name", "custom");
+            System.setProperty("spring.config.location", "file:" + customPropertiesPath);
+        } else {
+            System.setProperty("spring.config.name", "default");
+            System.setProperty("spring.config.location", "classpath:application.properties");
         }
 
         ApplicationContext context = new AnnotationConfigApplicationContext(ProgramConfiguration.class);

@@ -13,5 +13,5 @@ public interface DatabasePostConfig {
     /**
      * Configuration method
      */
-    void config() throws SQLException, IOException;
+    void config(String dumpName) throws SQLException, IOException;
 }

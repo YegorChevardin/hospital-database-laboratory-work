@@ -48,8 +48,9 @@ public class ProgramStartupImpl implements ProgramStartup {
 
     @Override
     public void start(boolean withDump) {
+        programStartupService.refreshDatabase();
         if (withDump) {
-            programStartupService.refreshDatabase();
+            programStartupService.insertionDumpExecute();
         }
         run();
     }

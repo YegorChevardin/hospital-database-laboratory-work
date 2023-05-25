@@ -11,4 +11,9 @@ public interface ProgramStartupService {
      * or refreshing the database
      */
     void refreshDatabase();
+
+    /**
+     * Method for insertion dump
+     */
+    void insertionDumpExecute();
 }

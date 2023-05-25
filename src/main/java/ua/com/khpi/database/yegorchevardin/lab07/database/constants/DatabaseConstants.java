@@ -11,6 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DatabaseConstants {
     DUMP_FILE_NAME("classpath:database/dump.sql"),
+    INSERTION_DUMP_FILE_NAME("classpath:database/insertions.sql"),
     PERMISSION_TABLE("permissions");
 
     @Getter

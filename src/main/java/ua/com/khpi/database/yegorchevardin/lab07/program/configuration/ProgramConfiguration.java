@@ -20,7 +20,7 @@ import java.util.Scanner;
  * @version 0.0.1
  */
 @Configuration
-@PropertySource(value = "classpath:application.properties")
+@PropertySource(value = "${spring.config.location}", ignoreResourceNotFound = true)
 @ComponentScan("ua.com.khpi.database.yegorchevardin.lab07")
 public class ProgramConfiguration {
     @Bean

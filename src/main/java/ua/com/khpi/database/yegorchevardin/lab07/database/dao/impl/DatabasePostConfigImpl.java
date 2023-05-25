@@ -22,9 +22,9 @@ public final class DatabasePostConfigImpl implements DatabasePostConfig {
     private final ResourceLoader resourceLoader;
 
     @Override
-    public void config() throws SQLException, IOException {
+    public void config(String dumpName) throws SQLException, IOException {
         Resource dumpFile = resourceLoader.getResource(
-                DatabaseConstants.DUMP_FILE_NAME.getValue()
+                dumpName
         );
 
         try (
