@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Enum constants for database values
+ * Doctor type constants
  * @author yegorchevardin
  * @version 0.0.1
  */
 @AllArgsConstructor
-public enum DatabaseConstants {
-    DUMP_FILE_NAME("classpath:database/dump.sql"),
-    PERMISSION_TABLE("permissions");
+public enum DoctorTypes {
+    DOCTOR("doctor"),
+    NURSE("nurse");
 
     @Getter
     private final String value;

@@ -1,5 +1,6 @@
 package ua.com.khpi.database.yegorchevardin.lab07.program.configuration;
 
+import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import javax.sql.DataSource;
+import java.util.Scanner;
 
 /**
  * Class for configuring spring and program start up
@@ -20,6 +23,16 @@ import javax.sql.DataSource;
 @PropertySource(value = "classpath:application.properties")
 @ComponentScan("ua.com.khpi.database.yegorchevardin.lab07")
 public class ProgramConfiguration {
+    @Bean
+    public Gson gson() {
+        return new Gson();
+    }
+
+    @Bean
+    public Scanner consoleScanner() {
+        return new Scanner(System.in);
+    }
+
     @Bean
     public DataSource dataSource(HikariConfig config) {
         return new HikariDataSource(config);
@@ -47,5 +60,10 @@ public class ProgramConfiguration {
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
         return new MethodValidationPostProcessor();
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validatorFactoryBean() {
+        return new LocalValidatorFactoryBean();
     }
 }

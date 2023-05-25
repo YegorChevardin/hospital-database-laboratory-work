@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS `appointment` (
+DROP TABLE IF EXISTS `appointments`;
+CREATE TABLE IF NOT EXISTS `appointments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `type` enum('consultation','service','operation') NOT NULL,
   `description` varchar(250) DEFAULT NULL,
@@ -8,9 +9,10 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 );
-INSERT INTO `appointment` (`id`, `type`, `description`, `meeting_date`, `user_doctor_id`, `hospital_card_id`) VALUES
+INSERT INTO `appointments` (`id`, `type`, `description`, `meeting_date`, `user_doctor_id`, `hospital_card_id`) VALUES
 	(1, 'consultation', 'Consultation for checking to the doctor', '2023-05-16 14:14:14', 1, 1);
 
+DROP TABLE IF EXISTS `categories`;
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -25,6 +27,7 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 	(1, 'troumatologist'),
 	(5, 'veterinarian');
 
+DROP TABLE IF EXISTS `diagnoses`;
 CREATE TABLE IF NOT EXISTS `diagnoses` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -40,6 +43,7 @@ INSERT INTO `diagnoses` (`id`, `name`, `description`, `type`, `hospital_card_id`
 	(3, 'Eyes too soft', 'Her eyes is too soft. Medical care needed', 'easy', 3),
 	(4, 'Nothing', 'You are absolutelly healthy man', 'tough', 2);
 
+DROP TABLE IF EXISTS `doctors`;
 CREATE TABLE IF NOT EXISTS `doctors` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -63,6 +67,7 @@ INSERT INTO `doctors` (`id`, `name`, `second_name`, `email`, `work_experience`, 
 	(6, 'Roman', 'Fedorchuk', 'roman_fedorchuk@gmail.com', 4, 'nurse', '2023-03-30 13:34:06', '2023-03-30 13:34:07', 1),
 	(7, 'Dima', 'Zhdanov', 'dima_zhdanov@gmail.com', 3, 'doctor', '2023-03-30 13:29:46', '2023-03-30 13:29:47', 3);
 
+DROP TABLE IF EXISTS `enrolls`;
 CREATE TABLE IF NOT EXISTS `enrolls` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `description` varchar(250) NOT NULL,
@@ -79,6 +84,7 @@ INSERT INTO `enrolls` (`id`, `description`, `is_approved`, `user_id`, `created_a
 	(4, 'I fill pain', 0, 2, '2023-03-30 13:43:04'),
 	(5, 'I want to check my health', 1, 3, '2023-03-30 13:43:47');
 
+DROP TABLE IF EXISTS `hospital_cards`;
 CREATE TABLE IF NOT EXISTS `hospital_cards` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -93,6 +99,7 @@ INSERT INTO `hospital_cards` (`id`, `name`, `created_at`, `user_id`) VALUES
 	(3, 'Sonya\'s hospital card', '2023-03-30 13:36:20', 4),
 	(4, 'Anya\'s hospital card', '2023-03-30 13:37:02', 2);
 
+DROP TABLE IF EXISTS `log_events`;
 CREATE TABLE IF NOT EXISTS `log_events` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `description` varchar(500) NOT NULL,
@@ -107,7 +114,8 @@ INSERT INTO `log_events` (`id`, `description`, `created_at`) VALUES
 	(4, 'deployed an application', '2023-03-30 13:41:06'),
 	(5, 'tested an application', '2023-03-30 13:41:15');
 
-CREATE TABLE IF NOT EXISTS `permissons` (
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `description` varchar(250) DEFAULT NULL,
@@ -115,11 +123,12 @@ CREATE TABLE IF NOT EXISTS `permissons` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 );
-INSERT INTO `permissons` (`id`, `name`, `description`) VALUES
+INSERT INTO `permissions` (`id`, `name`, `description`) VALUES
 	(1, 'read', 'read permission allows you to read information from some sources'),
 	(2, 'write', 'write permission allows you to write some sources'),
 	(3, 'delete', 'delete permission allows you delete some information from sources');
 
+DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -132,11 +141,12 @@ INSERT INTO `roles` (`id`, `name`) VALUES
 	(2, 'moderator'),
 	(3, 'user');
 
-CREATE TABLE IF NOT EXISTS `roles_permissons` (
-  `permisson_id` int unsigned NOT NULL,
+DROP TABLE IF EXISTS `roles_permissions`;
+CREATE TABLE IF NOT EXISTS `roles_permissions` (
+  `permission_id` int unsigned NOT NULL,
   `role_id` int unsigned NOT NULL
 );
-INSERT INTO `roles_permissons` (`permisson_id`, `role_id`) VALUES
+INSERT INTO `roles_permissions` (`permission_id`, `role_id`) VALUES
 	(1, 3),
 	(1, 2),
 	(2, 2),
@@ -144,6 +154,7 @@ INSERT INTO `roles_permissons` (`permisson_id`, `role_id`) VALUES
 	(2, 1),
 	(3, 1);
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -165,6 +176,7 @@ INSERT INTO `users` (`id`, `name`, `second_name`, `email`, `phone`, `password`, 
 	(4, 'Sonya', 'Avdeeva', 'sonya_avdeeva', '+380999564732', 'sonya', '2023-03-30 13:25:59', '2023-03-30 13:25:59'),
 	(5, 'Some', 'Some', 'email@example.com', '123-456-7890', 'googleit', '2023-04-29 03:14:12', '2023-04-29 03:14:12');
 
+DROP TABLE IF EXISTS `users_doctors`;
 CREATE TABLE IF NOT EXISTS `users_doctors` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
@@ -179,6 +191,7 @@ INSERT INTO `users_doctors` (`id`, `user_id`, `doctor_id`) VALUES
 	(4, 2, 6),
 	(5, 2, 2);
 
+DROP TABLE IF EXISTS `users_roles`;
 CREATE TABLE IF NOT EXISTS `users_roles` (
   `role_id` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL

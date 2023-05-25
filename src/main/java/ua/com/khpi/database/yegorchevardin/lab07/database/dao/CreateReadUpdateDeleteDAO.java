@@ -6,7 +6,7 @@ package ua.com.khpi.database.yegorchevardin.lab07.database.dao;
  * @author Yehor Chevardin
  * @version 1.0.0
  */
-public interface CreateReadUpdateDelete<T> extends CreateReadDelete<T> {
+public interface CreateReadUpdateDeleteDAO<T> extends CreateReadDeleteDAO<T> {
     /**
      * Updates an entity of {@link T} datatype
      * @param item an updated entity

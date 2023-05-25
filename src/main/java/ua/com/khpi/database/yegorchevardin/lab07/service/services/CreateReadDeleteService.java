@@ -1,14 +1,14 @@
-package ua.com.khpi.database.yegorchevardin.lab07.database.dao;
+package ua.com.khpi.database.yegorchevardin.lab07.service.services;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Interface that represents create, read and delete operations in the database
- * @param <T> type of entity for processing
- * @author Yehor Chevardin
- * @version 1.0.0
+ * Interface for handling business logic of create read delete operations
+ * @author yegorchevardin
+ * @version 0.0.1
  */
-public interface CreateReadDelete<T> {
+public interface CreateReadDeleteService<T> extends ValidationService<T> {
     /**
      * Method for getting element by id from the database
      * @param id id of the element
@@ -26,7 +26,7 @@ public interface CreateReadDelete<T> {
      * Method for saving an entity of {@link T} datatype
      * @param entity an {@link T} entity to save
      */
-    void insert(T entity);
+    T insert(T entity);
 
     /**
      * Removes an entity of {@link T} datatype by its id
