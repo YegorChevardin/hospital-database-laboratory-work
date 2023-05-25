@@ -9,6 +9,8 @@ package ua.com.khpi.database.yegorchevardin.lab07.program.startup;
 public interface ProgramStartup {
     /**
      * Method for starting the application
+     * @param withDump Indicates should program execute pre built dump
+     * or not
      */
-    void start();
+    void start(boolean withDump);
 }

@@ -70,7 +70,7 @@ public class PermissionPage extends AbstractPage {
                 ));
                 break;
             case 5:
-                permissionService.getById(
+                permissionService.removeById(
                         Long.valueOf(menuOptionResolver.resolve())
                 );
                 System.out.println("Successfully deleted!");

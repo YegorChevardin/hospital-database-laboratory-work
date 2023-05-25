@@ -107,7 +107,7 @@ public class PermissionDAOImpl implements PermissionDAO {
             int count = 0;
             statement.setLong(++count, id);
             int deletedRows = statement.executeUpdate();
-            if (deletedRows > 0) {
+            if (deletedRows == 0) {
                 throw new DatabaseException("Cannot delete this row: " + id);
             }
         } catch (SQLException e) {

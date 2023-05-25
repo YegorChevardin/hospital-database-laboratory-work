@@ -12,8 +12,16 @@ import ua.com.khpi.database.yegorchevardin.lab07.program.startup.ProgramStartup;
  */
 public class Main {
     public static void main(String[] args) {
+        boolean withDump;
+
+        try {
+            withDump = Boolean.getBoolean(args[0]);
+        } catch (IndexOutOfBoundsException e) {
+            withDump = false;
+        }
+
         ApplicationContext context = new AnnotationConfigApplicationContext(ProgramConfiguration.class);
         ProgramStartup programStartup = context.getBean(ProgramStartup.class);
-        programStartup.start();
+        programStartup.start(withDump);
     }
 }
