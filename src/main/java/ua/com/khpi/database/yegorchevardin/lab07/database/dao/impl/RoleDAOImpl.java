@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import tech.tablesaw.api.Table;
 import ua.com.khpi.database.yegorchevardin.lab07.database.constants.DatabaseConstants;
 import ua.com.khpi.database.yegorchevardin.lab07.database.dao.RoleDAO;
-import ua.com.khpi.database.yegorchevardin.lab07.database.entity.Permission;
 import ua.com.khpi.database.yegorchevardin.lab07.database.entity.Role;
 import ua.com.khpi.database.yegorchevardin.lab07.database.exception.DatabaseException;
 

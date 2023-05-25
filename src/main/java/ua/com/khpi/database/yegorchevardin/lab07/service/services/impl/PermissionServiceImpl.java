@@ -1,6 +1,5 @@
 package ua.com.khpi.database.yegorchevardin.lab07.service.services.impl;
 
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
