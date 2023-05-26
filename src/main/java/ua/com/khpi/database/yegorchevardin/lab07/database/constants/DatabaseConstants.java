@@ -14,7 +14,8 @@ public enum DatabaseConstants {
     INSERTION_DUMP_FILE_NAME("classpath:database/insertions.sql"),
     PERMISSION_TABLE("permissions"),
     ROLES_TABLE("roles"),
-    CATEGORIES_TABLE("categories");
+    CATEGORIES_TABLE("categories"),
+    DOCTORS_TABLE("doctors");
 
     @Getter
     private final String value;

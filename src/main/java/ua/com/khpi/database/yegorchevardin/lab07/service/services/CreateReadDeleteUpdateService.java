@@ -10,5 +10,5 @@ public interface CreateReadDeleteUpdateService<T> extends CreateReadDeleteServic
      * Updates an entity of {@link T} datatype
      * @param item an updated entity
      */
-    void update(T item);
+    T update(T item);
 }

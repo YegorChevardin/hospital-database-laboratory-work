@@ -80,6 +80,7 @@ public class ProgramStartupImpl implements ProgramStartup {
             case 1 -> page = pages.get("permissionPage");
             case 2 -> page = pages.get("rolePage");
             case 3 -> page = pages.get("categoryPage");
+            case 4 -> page = pages.get("doctorPage");
         }
         return page;
     }

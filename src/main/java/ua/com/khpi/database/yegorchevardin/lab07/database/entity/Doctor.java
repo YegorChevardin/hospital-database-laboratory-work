@@ -3,11 +3,11 @@ package ua.com.khpi.database.yegorchevardin.lab07.database.entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import ua.com.khpi.database.yegorchevardin.lab07.database.constants.DoctorTypes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -33,8 +33,8 @@ public class Doctor {
     private Integer workExperience;
     @NotNull(message = "Doctor type cannot be null")
     private DoctorTypes type;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String createdAt = String.valueOf(LocalDateTime.now());
+    private String updatedAt = String.valueOf(LocalDateTime.now());
     @NotNull(message = "Doctor category cannot be null")
     private Category category;
 }
