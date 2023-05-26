@@ -2,7 +2,7 @@ package ua.com.khpi.database.yegorchevardin.lab07.service.services.impl;
 
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ua.com.khpi.database.yegorchevardin.lab07.database.dao.DoctorDAO;
 import ua.com.khpi.database.yegorchevardin.lab07.database.entity.Doctor;
 import ua.com.khpi.database.yegorchevardin.lab07.service.exceptions.DataExistsException;
@@ -13,7 +13,7 @@ import ua.com.khpi.database.yegorchevardin.lab07.service.services.DoctorService;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorDAO doctorDAO;

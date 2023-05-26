@@ -15,7 +15,8 @@ public enum DatabaseConstants {
     PERMISSION_TABLE("permissions"),
     ROLES_TABLE("roles"),
     CATEGORIES_TABLE("categories"),
-    DOCTORS_TABLE("doctors");
+    DOCTORS_TABLE("doctors"),
+    USERS_TABLE("users");
 
     @Getter
     private final String value;

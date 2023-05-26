@@ -38,6 +38,6 @@ public class User {
     @NotNull(message = "User password must be not null")
     @Length(min = 5, max = 128, message = "User password must be between 5 and 128 characters")
     private String password;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String createdAt = String.valueOf(LocalDateTime.now());
+    private String updatedAt = String.valueOf(LocalDateTime.now());
 }

@@ -3,11 +3,11 @@ package ua.com.khpi.database.yegorchevardin.lab07.database.dao.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ua.com.khpi.database.yegorchevardin.lab07.database.constants.DatabaseConstants;
-import ua.com.khpi.database.yegorchevardin.lab07.database.constants.DoctorTypes;
-import ua.com.khpi.database.yegorchevardin.lab07.database.dao.DoctorDAO;
-import ua.com.khpi.database.yegorchevardin.lab07.database.entity.Doctor;
+import ua.com.khpi.database.yegorchevardin.lab07.database.dao.UserDAO;
+import ua.com.khpi.database.yegorchevardin.lab07.database.entity.User;
 import ua.com.khpi.database.yegorchevardin.lab07.database.exception.DatabaseException;
-import ua.com.khpi.database.yegorchevardin.lab07.service.services.CategoryService;
+import ua.com.khpi.database.yegorchevardin.lab07.program.handlers.PasswordHashing;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.Instant;
@@ -20,45 +20,44 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class DoctorDAOImpl implements DoctorDAO {
+public class UserDAOImpl implements UserDAO {
     private static final String FIND_BY_ID =
-            "SELECT * FROM " + DatabaseConstants.DOCTORS_TABLE.getValue()
+            "SELECT * FROM " + DatabaseConstants.USERS_TABLE.getValue()
                     + " WHERE id = ?";
     private static final String FIND_ALL =
-            "SELECT * FROM " + DatabaseConstants.DOCTORS_TABLE.getValue();
-    private static final String INSERT_DOCTOR =
-            "INSERT INTO " + DatabaseConstants.DOCTORS_TABLE.getValue()
-                    + "(name, second_name, email, work_experience, type, created_at, updated_at, category_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "SELECT * FROM " + DatabaseConstants.USERS_TABLE.getValue();
+    private static final String INSERT_USER =
+            "INSERT INTO " + DatabaseConstants.USERS_TABLE.getValue()
+                    + "(name, second_name, email, phone, password, created_at, updated_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_BY_ID =
-            "DELETE FROM " + DatabaseConstants.DOCTORS_TABLE.getValue()
+            "DELETE FROM " + DatabaseConstants.USERS_TABLE.getValue()
                     + " WHERE id = ?";
     private static final String FIND_BY_NAME =
-            "SELECT * FROM " + DatabaseConstants.DOCTORS_TABLE.getValue()
+            "SELECT * FROM " + DatabaseConstants.USERS_TABLE.getValue()
                     + " WHERE name = ?";
     private static final String FIND_BY_EMAIL =
-            "SELECT * FROM " + DatabaseConstants.DOCTORS_TABLE.getValue()
+            "SELECT * FROM " + DatabaseConstants.USERS_TABLE.getValue()
                     + " WHERE email = ?";
-    private static final String FIND_BY_CATEGORY_ID =
-            "SELECT * FROM " + DatabaseConstants.DOCTORS_TABLE.getValue()
-                    + " WHERE category_id = ?";
-    private static final String UPDATE_DOCTORS =
-            "UPDATE doctors SET name = ?, " +
+    private static final String FIND_BY_PHONE =
+            "SELECT * FROM " + DatabaseConstants.USERS_TABLE.getValue()
+                    + " WHERE phone = ?";
+    private static final String UPDATE_USERS =
+            "UPDATE Users SET name = ?, " +
                     "second_name = ?, " +
                     "email = ?, " +
-                    "work_experience = ?, " +
-                    "type = ? , " +
+                    "phone = ?, " +
+                    "password = ? , " +
                     "created_at = ?, " +
-                    "updated_at = ?, " +
-                    "category_id = ? " +
+                    "updated_at = ? " +
                     "WHERE id = ?";
     
     private final DataSource dataSource;
-    private final CategoryService categoryService;
+    private final PasswordHashing passwordHashing;
     
     @Override
-    public Optional<Doctor> getById(Long id) {
-        Doctor doctor = null;
+    public Optional<User> getById(Long id) {
+        User user = null;
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)
@@ -67,17 +66,17 @@ public class DoctorDAOImpl implements DoctorDAO {
             statement.setLong(++count, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                doctor = extractFromResultSet(resultSet);
+                user = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage(), e);
         }
-        return Optional.ofNullable(doctor);
+        return Optional.ofNullable(user);
     }
 
     @Override
-    public List<Doctor> getAll() {
-        List<Doctor> doctors = new ArrayList<>();
+    public List<User> getAll() {
+        List<User> users = new ArrayList<>();
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement();
@@ -86,20 +85,20 @@ public class DoctorDAOImpl implements DoctorDAO {
                 )
         ) {
             while (resultSet.next()) {
-                doctors.add(extractFromResultSet(resultSet));
+                users.add(extractFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage(), e);
         }
-        return doctors;
+        return users;
     }
 
     @Override
-    public void insert(Doctor entity) {
+    public void insert(User entity) {
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
-                        INSERT_DOCTOR,
+                        INSERT_USER,
                         Statement.RETURN_GENERATED_KEYS
                 )
         ) {
@@ -136,11 +135,11 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public void update(Doctor item) {
+    public void update(User item) {
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection
-                     .prepareStatement(UPDATE_DOCTORS)
+                        .prepareStatement(UPDATE_USERS)
         ) {
             prepareStatementForUpdate(statement, item);
             int updatedCount = statement.executeUpdate();
@@ -154,35 +153,28 @@ public class DoctorDAOImpl implements DoctorDAO {
         }
     }
 
-    private int prepareStatement(PreparedStatement statement, Doctor doctor)
-            throws SQLException {
-        int count = 0;
-        statement.setString(++count, doctor.getName());
-        statement.setString(++count, doctor.getSecondName());
-        statement.setString(++count, doctor.getEmail());
-        statement.setLong(++count, doctor.getWorkExperience());
-        statement.setString(++count, doctor.getType().getValue());
-        statement.setTimestamp(++count, convertToTimestamp(doctor.getCreatedAt()));
-        statement.setTimestamp(++count, convertToTimestamp(doctor.getUpdatedAt()));
-        statement.setLong(++count, categoryService.findByName(doctor.getCategory().getName()).getId());
-        return count;
-    }
-
-    private void prepareStatementForUpdate(PreparedStatement statement, Doctor doctor) throws SQLException {
-        int currentRow = prepareStatement(statement, doctor);
-        statement.setLong(++currentRow, doctor.getId());
-    }
-
-    private Timestamp convertToTimestamp(String localDateTimeString) {
-        LocalDateTime localDateTime = LocalDateTime.parse(
-                localDateTimeString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-        return Timestamp.from(instant);
+    @Override
+    public Optional<User> findByPhoneNumber(String phone) {
+        User user = null;
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(FIND_BY_PHONE)
+        ) {
+            int count = 0;
+            statement.setString(++count, phone);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = extractFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage(), e);
+        }
+        return Optional.ofNullable(user);
     }
 
     @Override
-    public List<Doctor> findByName(String name) {
-        List<Doctor> doctors = new ArrayList<>();
+    public List<User> findByName(String name) {
+        List<User> users = new ArrayList<>();
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)
@@ -191,17 +183,17 @@ public class DoctorDAOImpl implements DoctorDAO {
             statement.setString(++count, name);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                doctors.add(extractFromResultSet(resultSet));
+                users.add(extractFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage(), e);
         }
-        return doctors;
+        return users;
     }
 
     @Override
-    public Optional<Doctor> findByEmail(String email) {
-        Doctor doctor = null;
+    public Optional<User> findByEmail(String email) {
+        User user = null;
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL)
@@ -210,54 +202,55 @@ public class DoctorDAOImpl implements DoctorDAO {
             statement.setString(++count, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                doctor = extractFromResultSet(resultSet);
+                user = extractFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage(), e);
         }
-        return Optional.ofNullable(doctor);
+        return Optional.ofNullable(user);
     }
 
-    @Override
-    public List<Doctor> findByCategory(Long categoryId) {
-        List<Doctor> doctors = new ArrayList<>();
-        try (
-                Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(FIND_BY_CATEGORY_ID)
-        ) {
-            int count = 0;
-            statement.setLong(++count, categoryId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                doctors.add(extractFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getMessage(), e);
-        }
-        return doctors;
-    }
-
-    private Doctor extractFromResultSet(ResultSet resultSet) throws SQLException {
-        Doctor doctor = new Doctor();
-        doctor.setId(resultSet.getLong("id"));
-        doctor.setName(resultSet.getString("name"));
-        doctor.setSecondName(resultSet.getString("second_name"));
-        doctor.setEmail(resultSet.getString("email"));
-        doctor.setWorkExperience(resultSet.getInt("work_experience"));
-        try {
-            doctor.setType(DoctorTypes.getTypeByName(resultSet.getString("type")));
-        } catch (IllegalArgumentException e) {
-            throw new DatabaseException(e.getMessage() + "Program needs to be updated");
-        }
-        doctor.setCreatedAt(String.valueOf(
+    private User extractFromResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getLong("id"));
+        user.setName(resultSet.getString("name"));
+        user.setSecondName(resultSet.getString("second_name"));
+        user.setEmail(resultSet.getString("email"));
+        user.setPhone(resultSet.getString("phone"));
+        user.setPassword(resultSet.getString("password"));
+        user.setCreatedAt(String.valueOf(
                 resultSet.getTimestamp("created_at")
                         .toLocalDateTime()
         ));
-        doctor.setCreatedAt(String.valueOf(
+        user.setCreatedAt(String.valueOf(
                 resultSet.getTimestamp("updated_at")
                         .toLocalDateTime()
         ));
-        doctor.setCategory(categoryService.getById(resultSet.getLong("category_id")));
-        return doctor;
+        return user;
+    }
+
+    private int prepareStatement(PreparedStatement statement, User user)
+            throws SQLException {
+        int count = 0;
+        statement.setString(++count, user.getName());
+        statement.setString(++count, user.getSecondName());
+        statement.setString(++count, user.getEmail());
+        statement.setString(++count, user.getPhone());
+        statement.setString(++count, passwordHashing.hash(user.getPassword()));
+        statement.setTimestamp(++count, convertToTimestamp(user.getCreatedAt()));
+        statement.setTimestamp(++count, convertToTimestamp(user.getUpdatedAt()));
+        return count;
+    }
+
+    private void prepareStatementForUpdate(PreparedStatement statement, User user) throws SQLException {
+        int currentRow = prepareStatement(statement, user);
+        statement.setLong(++currentRow, user.getId());
+    }
+
+    private Timestamp convertToTimestamp(String localDateTimeString) {
+        LocalDateTime localDateTime = LocalDateTime.parse(
+                localDateTimeString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return Timestamp.from(instant);
     }
 }
