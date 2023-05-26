@@ -21,9 +21,10 @@ public class RolePage extends AbstractPage {
             3 - Show role by id;
             4 - Insert role;
             5 - Delete role by id;
-            6 - Go back;
+            6 - Show role by name;
+            7 - Go back;
             """;
-    private static final List<Integer> options = List.of(0, 1, 2, 3, 4, 5, 6);
+    private static final List<Integer> options = List.of(0, 1, 2, 3, 4, 5, 6, 7);
     private final MenuOptionResolver menuOptionResolver;
     private final ObjectInputHandler<Role> objectInputHandler;
     private final RoleService roleService;
@@ -75,6 +76,11 @@ public class RolePage extends AbstractPage {
                 System.out.println("Successfully deleted!");
                 break;
             case 6:
+                String name = menuOptionResolver.resolveLine();
+                System.out.println(
+                        gson.toJson(roleService.findByName(name))
+                );
+            case 7:
                 return;
         }
         execute();

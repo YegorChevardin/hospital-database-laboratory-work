@@ -151,6 +151,7 @@ public class RoleDAOImpl implements RoleDAO {
 
     private Role extractFromResultSet(ResultSet resultSet) throws SQLException {
         Role role = new Role();
+        role.setId(resultSet.getLong("id"));
         role.setName(resultSet.getString("name"));
         return role;
     }

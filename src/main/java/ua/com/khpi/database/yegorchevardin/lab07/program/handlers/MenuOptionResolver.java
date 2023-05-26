@@ -17,4 +17,9 @@ public interface MenuOptionResolver {
      * Method for resolving any range
      */
     Integer resolve();
+
+    /**
+     * Gets string from input
+     */
+    String resolveLine();
 }

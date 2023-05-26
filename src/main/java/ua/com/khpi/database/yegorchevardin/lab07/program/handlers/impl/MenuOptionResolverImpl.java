@@ -29,6 +29,12 @@ public class MenuOptionResolverImpl implements MenuOptionResolver {
         return scannInteger();
     }
 
+    @Override
+    public String resolveLine() {
+        System.out.println("Please, type here string to proceed: ");
+        return scanner.nextLine();
+    }
+
     private Integer scannInteger() {
         Integer result;
         try {

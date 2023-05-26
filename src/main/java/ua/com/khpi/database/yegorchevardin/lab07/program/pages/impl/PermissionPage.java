@@ -20,9 +20,10 @@ public class PermissionPage extends AbstractPage {
             3 - Show permission by id;
             4 - Insert permission;
             5 - Delete permission by id;
-            6 - Go back;
+            6 - Find permission by name;
+            7 - Go back;
             """;
-    private static final List<Integer> options = List.of(0, 1, 2, 3, 4, 5, 6);
+    private static final List<Integer> options = List.of(0, 1, 2, 3, 4, 5, 6, 7);
 
     private final MenuOptionResolver menuOptionResolver;
     private final PermissionService permissionService;
@@ -76,6 +77,13 @@ public class PermissionPage extends AbstractPage {
                 System.out.println("Successfully deleted!");
                 break;
             case 6:
+                String name = menuOptionResolver.resolveLine();
+                System.out.println(
+                        gson.toJson(
+                                permissionService.findByName(name)
+                        )
+                );
+            case 7:
                 return;
         }
         execute();

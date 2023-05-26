@@ -152,6 +152,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     private Category extractFromResultSet(ResultSet resultSet) throws SQLException {
         Category category = new Category();
+        category.setId(resultSet.getLong("id"));
         category.setName(resultSet.getString("name"));
         return category;
     }
