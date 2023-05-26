@@ -9,6 +9,11 @@ import java.util.Optional;
  * @author yegorchevardin
  * @version 0.0.1
  */
-public interface CategoryDAO extends CreateReadDeleteDAO<Optional<Category>>,
+public interface CategoryDAO extends CreateReadDeleteDAO<Category>,
         TableResultDAO {
+    /**
+     * Method for finding
+     * category by name
+     */
+    Optional<Category> findByName(String name);
 }

@@ -79,6 +79,7 @@ public class ProgramStartupImpl implements ProgramStartup {
             case 0 -> System.exit(0);
             case 1 -> page = pages.get("permissionPage");
             case 2 -> page = pages.get("rolePage");
+            case 3 -> page = pages.get("categoryPage");
         }
         return page;
     }

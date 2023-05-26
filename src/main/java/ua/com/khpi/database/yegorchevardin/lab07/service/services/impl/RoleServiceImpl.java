@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
                 roleDAO.findByName(entity.getName()).isPresent()
         ) {
             throw new DataExistsException(
-                    "Cannot insert permission with this name: " + entity.getName()
+                    "Cannot insert role with this name: " + entity.getName()
                             + ", because it is already exists in database"
             );
         }
@@ -51,11 +51,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void removeById(long id) {
-        if(
+        if (
                 roleDAO.getById(id).isEmpty()
         ) {
             throw new DataExistsException(
-                    "Cannot delete permission with this id, because it is already exists"
+                    "Cannot delete role with this id, because it is already exists"
             );
         }
         roleDAO.removeById(id);
